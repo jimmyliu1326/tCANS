@@ -10,7 +10,7 @@ jobs:
       - run:
           name: Setup environment
           command: |
-            conda install -y -c bioconda nextflow
+            conda install -y -c bioconda nextflow=21.10.6
       - run:
           name: Clone Github Repo
           command: |
