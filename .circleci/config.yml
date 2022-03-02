@@ -2,7 +2,7 @@
 jobs:
   build:
     docker:
-      - image: continuumio/miniconda3
+      - image: ubuntu:18.04
     environment:
       PYTHON_VERSION: 3.8
     steps:
@@ -15,6 +15,7 @@ jobs:
       - run:
           name: Setup nextflow
           command: |
+            apt-get install curl
             curl -s https://get.nextflow.io | bash
             chmod +x nextflow
       - run:
