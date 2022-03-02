@@ -14,6 +14,7 @@ jobs:
       - run:
           name: Pull nextflow workflow
           command: |
+            rm -rf ~/.gitconfig
             nextflow pull -hub github jimmyliu1326/tCANS
       - run:
           name: Run Tests
