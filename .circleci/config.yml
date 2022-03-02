@@ -2,20 +2,22 @@
 jobs:
   build:
     docker:
-      - image: nextflow/nextflow
+      - image: ubuntu:18.04
     environment:
       PYTHON_VERSION: 3.8
     steps:
       - checkout
       - run:
+          name: Setup environment
+          command: |
+          apt-get update -y && apt-get install -y git
+          wget -qO- get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+      - run:
           name: Clone Github Repo
           command: |
             cd $HOME
             git clone https://github.com/jimmyliu1326/tCANS.git
-      - run:
-          name: Setup environment
-          command: |
-            apt-get update -y && apt-get install -y curl
       - run:
           name: Run Tests
           command: |
