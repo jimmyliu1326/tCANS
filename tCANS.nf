@@ -32,7 +32,7 @@ if( !params.primers ) { error pipeline_name+": Missing --primers parameter" }
 // print log info
 log.info """\
          ==================================
-               tCANS  P I P E L I N E    
+             t C A N S   P I P E L I N E    
          ==================================
          input               : ${params.input}
          outdir              : ${params.outdir}
@@ -57,8 +57,8 @@ workflow {
 
     // workflow start
     combine(data)
-    nanofilt(combine.out)
-    minimap2(nanofilt.out, reference)
+    nanoq(combine.out)
+    minimap2(nanoq.out, reference)
     ivar_trim(minimap2.out, primers)
     bam2fq(ivar_trim.out)
     ivar_consensus(ivar_trim.out)
