@@ -15,7 +15,7 @@ jobs:
       - run:
           name: Setup nextflow
           command: |
-            apt-get install curl
+            apt-get update && apt-get install curl
             curl -s https://get.nextflow.io | bash
             chmod +x nextflow
       - run:
