@@ -10,8 +10,8 @@
  - Nextflow >= v21.0.0
  - Conda or Docker
 
-# Clone repository
-git clone https://github.com/jimmyliu1326/tCANS.git
+# Download workflow locally
+nextflow pull -h github jimmyliu1326/tCANS
 ```
 
 ## Pipeline usage
@@ -27,12 +27,12 @@ Optional arguments:
 
 ## Example pipeline call using Conda environments
 ```
-nextflow run /path/to/tCANS.nf --input samples.csv --outdir /path/to/output -profile conda
+nextflow run jimmyliu1326/tCANS --input samples.csv --outdir /path/to/output -profile conda
 ```
 
 ## Example pipeline call using Docker images
 ```
-nextflow run /path/to/tCANS.nf --input samples.csv --outdir /path/to/output -profile docker
+nextflow run jimmyliu1326/tCANS --input samples.csv --outdir /path/to/output -profile docker
 ```
 
 ## Input file formats
