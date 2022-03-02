@@ -1,3 +1,4 @@
+[![CANS](https://circleci.com/gh/jimmyliu1326/tCANS.svg?style=svg)](https://app.circleci.com/pipelines/github/jimmyliu1326/tCANS)
 # tCANS: Consensus calling for (Tiling) Amplicon Nanopore Sequencing
 
 ## Description
