@@ -7,7 +7,7 @@ pipeline_name = "tCANS"
 // print help message
 def helpMessage() {
     log.info """
-        Usage: nextflow run T-CANS.nf --input samples.csv --outdir /path/to/output
+        Usage: nextflow run jimmyliu1326/tCANS --input samples.csv --outdir /path/to/output
         Required arguments:
          --input                       Path to .csv containing two columns describing Sample ID and path to raw reads directory
          --primers                     Path to .bed encoding the position of each primer
