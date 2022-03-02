@@ -11,7 +11,7 @@
  - Conda or Docker
 
 # Download workflow locally
-nextflow pull -h github jimmyliu1326/tCANS
+nextflow pull -hub github jimmyliu1326/tCANS
 ```
 
 ## Pipeline usage
