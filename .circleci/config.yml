@@ -2,7 +2,7 @@
 jobs:
   build:
     docker:
-      - image: ubuntu:18.04
+      - image: continuumio/miniconda3
     environment:
       PYTHON_VERSION: 3.8
     steps:
