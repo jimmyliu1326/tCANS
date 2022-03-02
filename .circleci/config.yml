@@ -12,12 +12,10 @@ jobs:
           command: |
             conda install -y -c conda-forge -c bioconda nextflow=21.10.6
       - run:
-          name: Clone Github Repo
+          name: Pull nextflow workflow
           command: |
-            cd $HOME
-            git clone https://github.com/jimmyliu1326/tCANS.git
+            nextflow pull -hub github jimmyliu1326/tCANS
       - run:
           name: Run Tests
           command: |
-            cd $HOME/tCANS
-            nextflow run tCANS.nf --help
+            nextflow run jimmyliu1326/tCANS --help
