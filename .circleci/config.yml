@@ -2,7 +2,7 @@
 jobs:
   build:
     docker:
-      - image: continuumio/miniconda3
+      - image: nextflow/nextflow
     environment:
       PYTHON_VERSION: 3.8
     steps:
@@ -13,11 +13,9 @@ jobs:
             cd $HOME
             git clone https://github.com/jimmyliu1326/tCANS.git
       - run:
-          name: Setup nextflow
+          name: Setup environment
           command: |
             apt-get update -y && apt-get install -y curl
-            curl -s https://get.nextflow.io | bash
-            chmod +x nextflow
       - run:
           name: Run Tests
           command: |
