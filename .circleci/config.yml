@@ -10,8 +10,9 @@ jobs:
       - run:
           name: Setup environment
           command: |
-            apt-get update -y && apt-get install -y git
+            apt-get update -y && apt-get install -y git wget
             wget -qO- get.nextflow.io | bash
+            chmod +x nextflow
             sudo mv nextflow /usr/local/bin/
       - run:
           name: Clone Github Repo
