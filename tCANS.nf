@@ -52,9 +52,8 @@ include { ivar_consensus; ivar_trim; bam2fq } from './modules/ivar.nf'
 workflow {
     // read data
     data = channel.fromPath(params.input, checkIfExists: true).splitCsv(header: false)
-    reference = channel.fromPath(params.reference, checkIfExists: true)
-    primers = channel.fromPath(params.primers, checkIfExists: true)
-
+    reference = file(params.reference, checkIfExists:true)
+    primers = file(params.primers, checkIfExists:true)
     // workflow start
     combine(data)
     nanoq(combine.out)
