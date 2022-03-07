@@ -44,3 +44,17 @@ process bam2fq {
         samtools fastq -@ ${task.cpus} ${bam} > ${bam.simpleName}.trimmed.fastq
         """
 }
+
+process clipbam {
+    tag "Bam clipping on ${bam.simpleName}"
+    label "process_low"
+
+    input:
+        path(bam)
+    output:
+        file("${bam.simpleName}.clipped.bam")
+    shell:
+        """
+        bamutils removeclipping ${bam} ${bam.simpleName}.clipped.bam
+        """
+}

@@ -46,7 +46,7 @@ log.info """\
 include { combine; nanoq; nanofilt } from './modules/nanopore-base.nf'
 include { minimap2 } from './modules/nanopore-align.nf'
 include { medaka } from './modules/nanopore-polish.nf'
-include { ivar_consensus; ivar_trim; bam2fq } from './modules/ivar.nf'
+include { ivar_consensus; ivar_trim; bam2fq; clipbam } from './modules/ivar.nf'
 
 // define workflow
 workflow {
@@ -59,7 +59,8 @@ workflow {
     nanoq(combine.out)
     minimap2(nanoq.out, reference)
     ivar_trim(minimap2.out, primers)
-    bam2fq(ivar_trim.out)
+    clipbam(ivar_trim.out)
+    bam2fq(clipbam.out)
     ivar_consensus(ivar_trim.out)
     medaka(bam2fq.out, ivar_consensus.out)
 
