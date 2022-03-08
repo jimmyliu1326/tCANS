@@ -58,3 +58,18 @@ process clipbam {
         bamutils removeclipping ${bam} ${bam.simpleName}.clipped.bam
         """
 }
+
+process ampliconclip {
+    tag "Primer trimming on ${bam.simpleName}"
+    label "process_low"
+
+    input:
+        path(bam)
+        path(bed)
+    output:
+        file("${bam.simpleName}.trimmed.bam")
+    shell:
+        """
+        samtools ampliconclip --no-excluded -@ ${task.cpus} --hard-clip --both-ends --filter-len 0 -b ${bed} ${bam} > ${bam.simpleName}.trimmed.bam
+        """
+}

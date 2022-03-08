@@ -2,7 +2,7 @@
 # tCANS: Consensus calling for (Tiling) Amplicon Nanopore Sequencing
 
 ## Description
-`tCANS` is a Nextflow pipeline designed to generate a single contiguous consensus sequence from tiling amplicon Nanopore sequencing data. Primer trimming and consensus calling are performed using iVar followed by consensus polishing using medaka.
+`tCANS` is a Nextflow pipeline designed to generate a single contiguous consensus sequence from tiling amplicon Nanopore sequencing data. The pipeline uses `samtools ampliconclip`, `iVar` and `medaka` to perform primer trimming, consensus calling and consensus polishing, respectively.
 
 ## Installation
 ```bash
