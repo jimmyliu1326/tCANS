@@ -48,7 +48,7 @@ process nanoq {
         file("${reads.simpleName}.filt.fastq.gz")
     shell:
         """
-        nanoq -i ${reads} -q 5 -O g > ${reads.simpleName}.filt.fastq.gz
+        nanoq -i ${reads} -l 200 -q 5 -O g > ${reads.simpleName}.filt.fastq.gz
         """
 }
 
