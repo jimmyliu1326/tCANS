@@ -22,6 +22,8 @@ Required arguments:
     --reference                   Path to .fasta reference sequence that corresponds to the coordinates in the primers .bed file
     --outdir                      Output directory path
 Optional arguments:
+    --host                        Path to host reference genome in FASTA format for dehosting raw reads
+    --notrim                       Disable adapter trimming by Porechop
     --help                        Print pipeline usage statement
 ```
 
