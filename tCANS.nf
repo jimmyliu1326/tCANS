@@ -14,6 +14,8 @@ def helpMessage() {
          --reference                   Path to .fasta reference sequence that corresponds to the coordinates in the primers .bed file
          --outdir                      Output directory path
         Optional arguments:
+        --host                         Path to host reference genome in FASTA format for dehosting raw reads
+        --notrim                       Disable adapter trimming by Porechop
         --help                         Print pipeline usage statement
         """.stripIndent()
 }
@@ -38,13 +40,15 @@ log.info """\
          outdir              : ${params.outdir}
          primers             : ${params.primers}
          reference           : ${params.reference}
+         host                : ${params.host}
          
          """
          .stripIndent()
 
 // import modules
-include { combine; nanoq } from './modules/nanopore-base.nf'
-include { minimap2 } from './modules/nanopore-align.nf'
+include { combine; nanoq; porechop } from './modules/nanopore-base.nf'
+include { minimap2; minimap2 as minimap2_dehost } from './modules/nanopore-align.nf'
+include { dehost } from './modules/dehost.nf'
 include { medaka } from './modules/nanopore-polish.nf'
 include { ivar_consensus; ivar_trim; bam2fq; clipbam; ampliconclip } from './modules/ivar.nf'
 
@@ -55,12 +59,34 @@ workflow {
     reference = file(params.reference, checkIfExists:true)
     primers = file(params.primers, checkIfExists:true)
     // workflow start
+    
+    // quality filter
     combine(data)
-    nanoq(combine.out)
-    minimap2(nanoq.out, reference)
+    if( !params.notrim ) { 
+        porechop(combine.out)
+        nanoq(porechop.out)
+    } else {
+        nanoq(combine.out)
+    }
+    
+    // dehosting
+    if ( !params.host ) {
+        minimap2(nanoq.out, reference)
+    } else {
+        host = file(params.host, checkIfExists:true)
+        minimap2_dehost(nanoq.out, host)
+        dehost(minimap2_dehost.out)
+        minimap2(dehost.out, reference)
+    }
+
+    // primer trimming
     ivar_trim(minimap2.out, primers)
     ampliconclip(minimap2.out, primers)
     bam2fq(ampliconclip.out)
+
+    // consensus calling
     ivar_consensus(ivar_trim.out)
+
+    // consensus polishing
     medaka(bam2fq.out, ivar_consensus.out)
 }

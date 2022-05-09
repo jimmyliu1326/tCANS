@@ -27,7 +27,7 @@ process ivar_consensus {
         file("${bam.simpleName}.fa")
     shell:
         """
-        samtools sort ${bam} | samtools mpileup -d 1000 -A -Q 0 - | ivar consensus -p ${bam.simpleName} -q 5
+        samtools sort ${bam} | samtools mpileup -d 1000 -A -Q 0 - | ivar consensus -p ${bam.simpleName} -q 10
         """
 }
 

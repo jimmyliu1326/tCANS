@@ -23,9 +23,9 @@ process combine {
 }
 
 process porechop {
-    tag "Adaptor trimming on ${reads.simpleName}"
+    tag "Adapter trimming on ${reads.simpleName}"
     label "process_high"
-    cache false
+    cache true
 
     input:
         path(reads)
@@ -48,7 +48,7 @@ process nanoq {
         file("${reads.simpleName}.filt.fastq.gz")
     shell:
         """
-        nanoq -i ${reads} -l 200 -q 5 -O g > ${reads.simpleName}.filt.fastq.gz
+        nanoq -i ${reads} -l 300 -q 5 -O g > ${reads.simpleName}.filt.fastq.gz
         """
 }
 

@@ -3,7 +3,7 @@ nextflow.enable.dsl=2
 
 // post-assembly polishing for Nanopore workflows
 process medaka {
-    tag "Assembly polishing for ${reads.simpleName}"
+    tag "Consensus polishing for ${reads.simpleName}"
     label "process_medium"
     publishDir "$params.outdir"+"/${reads.simpleName}/consensus", mode: "copy"
 
