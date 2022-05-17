@@ -9,12 +9,17 @@ def helpMessage() {
     log.info """
         Usage: nextflow run jimmyliu1326/tCANS --input samples.csv --outdir /path/to/output
         Required arguments:
-         --input                       Path to .csv containing two columns describing Sample ID and path to raw reads directory
+         --input                       Path to .csv containing two columns describing Sample ID and path to 
+                                       raw reads directory
          --primers                     Path to .bed encoding the position of each primer
-         --reference                   Path to .fasta reference sequence that corresponds to the coordinates in the primers .bed file
+         --reference                   Path to .fasta reference sequence that corresponds to the coordinates
+                                       in the primers .bed file
          --outdir                      Output directory path
         Optional arguments:
         --host                         Path to host reference genome in FASTA format for dehosting raw reads
+        --gpu                          Accelerate specific processes that utilize GPU computing. Must have 
+                                       NVIDIA Container Toolkit installed to enable GPU computing, otherwise
+                                       use CPU. (Only works with -profile docker)
         --notrim                       Disable adapter trimming by Porechop
         --help                         Print pipeline usage statement
         """.stripIndent()
@@ -49,7 +54,7 @@ log.info """\
 include { combine; nanoq; porechop } from './modules/nanopore-base.nf'
 include { minimap2; minimap2 as minimap2_dehost } from './modules/nanopore-align.nf'
 include { dehost } from './modules/dehost.nf'
-include { medaka } from './modules/nanopore-polish.nf'
+include { medaka; medaka_gpu } from './modules/nanopore-polish.nf'
 include { ivar_consensus; ivar_trim; bam2fq; clipbam; ampliconclip } from './modules/ivar.nf'
 
 // define workflow
@@ -88,5 +93,10 @@ workflow {
     ivar_consensus(ivar_trim.out)
 
     // consensus polishing
-    medaka(bam2fq.out, ivar_consensus.out)
+    if ( params.gpu ) {
+        medaka_gpu(ivar_consensus.out.join(bam2fq.out))
+    } else {
+        medaka(ivar_consensus.out.join(bam2fq.out))
+    }
+    
 }
