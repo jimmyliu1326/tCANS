@@ -10,7 +10,7 @@ process combine {
     input:
         tuple val(sample_id), path(reads)
     output:
-        file("${sample_id}.{fastq,fastq.gz}")
+        tuple val(sample_id), file("${sample_id}.{fastq,fastq.gz}")
     shell:
         """
         sample=\$(ls ${reads} | head -n 1)
@@ -28,9 +28,9 @@ process porechop {
     cache true
 
     input:
-        path(reads)
+        tuple val(sample_id), path(reads)
     output:
-        file("${reads.simpleName}.trimmed.fastq")
+        tuple val(sample_id), file("${reads.simpleName}.trimmed.fastq")
     shell:
         """
         porechop -t ${task.cpus} -i ${reads} -o ${reads.simpleName}.trimmed.fastq
@@ -40,12 +40,12 @@ process porechop {
 process nanoq {
     tag "Read filtering on ${reads.simpleName}"
     label "process_low"
-    cache false
+    cache true
 
     input:
-        path(reads)
+        tuple val(sample_id), path(reads)
     output:
-        file("${reads.simpleName}.filt.fastq.gz")
+        tuple val(sample_id), file("${reads.simpleName}.filt.fastq.gz")
     shell:
         """
         nanoq -i ${reads} -l 300 -q 5 -O g > ${reads.simpleName}.filt.fastq.gz
@@ -55,12 +55,12 @@ process nanoq {
 process nanofilt {
     tag "Read filtering on ${reads.simpleName}"
     label "process_low"
-    cache false
+    cache true
 
     input:
-        path(reads)
+        tuple val(sample_id), path(reads)
     output:
-        file("${reads.simpleName}.filt.fastq.gz")
+        tuple val(sample_id), file("${reads.simpleName}.filt.fastq.gz")
     shell:
         """
         sample=\$(ls ${reads} | head -n 1)

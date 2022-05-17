@@ -6,9 +6,9 @@ process dehost {
     cache false
 
     input:
-        path(bam)
+        tuple val(sample_id), path(bam)
     output:
-        file("${bam.simpleName}.dehosted.fastq")
+        tuple val(sample_id), file("${bam.simpleName}.dehosted.fastq")
     shell:
         """
         samtools view -bS -f4 -@ {task.cpus} ${bam} | samtools fastq -@ {task.cpus} > ${bam.simpleName}.dehosted.fastq

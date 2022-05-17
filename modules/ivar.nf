@@ -7,10 +7,10 @@ process ivar_trim {
     label "process_medium"
 
     input:
-        path(bam)
+        tuple val(sample_id), path(bam)
         path(bed)
     output:
-        file("${bam.simpleName}.trimmed.bam")
+        tuple val(sample_id), file("${bam.simpleName}.trimmed.bam")
     shell:
         """
         ivar trim -b ${bed} -p ${bam.simpleName}.trimmed -i ${bam} -q 0
@@ -22,9 +22,9 @@ process ivar_consensus {
     label "process_medium"
 
     input:
-        path(bam)
+        tuple val(sample_id), path(bam)
     output:
-        file("${bam.simpleName}.fa")
+        tuple val(sample_id), file("${bam.simpleName}.fa")
     shell:
         """
         samtools sort ${bam} | samtools mpileup -d 1000 -A -Q 0 - | ivar consensus -p ${bam.simpleName} -q 10
@@ -36,9 +36,9 @@ process bam2fq {
     label "process_low"
 
     input:
-        path(bam)
+        tuple val(sample_id), path(bam)
     output:
-        file("${bam.simpleName}.trimmed.fastq")
+        tuple val(sample_id), file("${bam.simpleName}.trimmed.fastq")
     shell:
         """
         samtools fastq -@ ${task.cpus} ${bam} > ${bam.simpleName}.trimmed.fastq
@@ -50,9 +50,9 @@ process clipbam {
     label "process_low"
 
     input:
-        path(bam)
+        tuple val(sample_id), path(bam)
     output:
-        file("${bam.simpleName}.clipped.bam")
+        tuple val(sample_id), file("${bam.simpleName}.clipped.bam")
     shell:
         """
         bamutils removeclipping ${bam} ${bam.simpleName}.clipped.bam
@@ -64,10 +64,10 @@ process ampliconclip {
     label "process_low"
 
     input:
-        path(bam)
+        tuple val(sample_id), path(bam)
         path(bed)
     output:
-        file("${bam.simpleName}.trimmed.bam")
+        tuple val(sample_id), file("${bam.simpleName}.trimmed.bam")
     shell:
         """
         samtools ampliconclip --no-excluded -@ ${task.cpus} --hard-clip --both-ends --filter-len 0 -b ${bed} ${bam} > ${bam.simpleName}.trimmed.bam

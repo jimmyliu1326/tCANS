@@ -7,10 +7,10 @@ process minimap2 {
     label "process_medium"
 
     input:
-        path(reads)
+        tuple val(sample_id), path(reads)
         path(reference)
     output:
-        file("${reads.simpleName}.bam")
+        tuple val(sample_id), file("${reads.simpleName}.bam")
     shell:
         """
         minimap2 -ax map-ont -t ${task.cpus} ${reference} ${reads} | samtools view -bS -@ ${task.cpus} - | samtools sort - > ${reads.simpleName}.bam
