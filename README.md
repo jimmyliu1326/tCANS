@@ -23,7 +23,9 @@ Required arguments:
     --outdir                      Output directory path
 Optional arguments:
     --host                        Path to host reference genome in FASTA format for dehosting raw reads
-    --notrim                       Disable adapter trimming by Porechop
+    --notrim                      Disable adapter trimming by Porechop
+    --gpu                         Accelerate specific processes that utilize GPU computing. Must have NVIDIA Container
+                                  Toolkit installed to enable GPU computing, otherwise use CPU. (Only works with -profile docker)
     --help                        Print pipeline usage statement
 ```
 
