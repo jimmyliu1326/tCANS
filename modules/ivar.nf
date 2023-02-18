@@ -1,75 +1,58 @@
-#!/usr/bin/env nextflow
-nextflow.enable.dsl=2
-
-// alignment processes for Nanopore workflows
 process ivar_trim {
-    tag "Primer trimming on ${bam.simpleName}"
+    tag "Primer trimming on ${sample_id}"
     label "process_medium"
 
     input:
         tuple val(sample_id), path(bam)
         path(bed)
     output:
-        tuple val(sample_id), file("${bam.simpleName}.trimmed.bam")
+        tuple val(sample_id), file("${sample_id}.trimmed.bam")
     shell:
         """
-        ivar trim -b ${bed} -p ${bam.simpleName}.trimmed -i ${bam} -q 0
+        ivar trim -b ${bed} -p ${sample_id}.trimmed -i ${bam} -q 0
         """
 }
 
 process ivar_consensus {
-    tag "Consensus calling on ${bam.simpleName}"
+    tag "Consensus calling on ${sample_id}"
     label "process_medium"
 
     input:
         tuple val(sample_id), path(bam)
     output:
-        tuple val(sample_id), file("${bam.simpleName}.fa")
+        tuple val(sample_id), file("*.unpolish.fa")
     shell:
         """
-        samtools sort ${bam} | samtools mpileup -d 1000 -A -Q 0 - | ivar consensus -p ${bam.simpleName} -q 10
+        samtools mpileup -d ${params.max_depth} -A -Q ${params.min_rq} ${bam} | ivar consensus -p ${sample_id}.unpolish -q ${params.min_rq} -m ${params.min_depth}
         """
 }
 
 process bam2fq {
-    tag "bam2fq on ${bam.simpleName}"
+    tag "bam2fq on ${sample_id}"
     label "process_low"
 
     input:
         tuple val(sample_id), path(bam)
     output:
-        tuple val(sample_id), file("${bam.simpleName}.trimmed.fastq")
+        tuple val(sample_id), file("*.fastq")
     shell:
         """
-        samtools fastq -@ ${task.cpus} ${bam} > ${bam.simpleName}.trimmed.fastq
-        """
-}
-
-process clipbam {
-    tag "Bam clipping on ${bam.simpleName}"
-    label "process_low"
-
-    input:
-        tuple val(sample_id), path(bam)
-    output:
-        tuple val(sample_id), file("${bam.simpleName}.clipped.bam")
-    shell:
-        """
-        bamutils removeclipping ${bam} ${bam.simpleName}.clipped.bam
+        samtools fastq -@ ${task.cpus} ${bam} > ${sample_id}.trimmed.fastq
         """
 }
 
 process ampliconclip {
-    tag "Primer trimming on ${bam.simpleName}"
+    tag "Primer trimming on ${sample_id}"
     label "process_low"
+    // publishDir "$params.outdir"+"/amplicon_clip_aln/", mode: "copy"
 
     input:
         tuple val(sample_id), path(bam)
         path(bed)
     output:
-        tuple val(sample_id), file("${bam.simpleName}.trimmed.bam")
+        tuple val(sample_id), file("${sample_id}.trimmed.bam")
     shell:
         """
-        samtools ampliconclip --no-excluded -@ ${task.cpus} --hard-clip --both-ends --filter-len 0 -b ${bed} ${bam} > ${bam.simpleName}.trimmed.bam
+        samtools ampliconclip --no-excluded -@ ${task.cpus} --hard-clip --both-ends --filter-len 0 -b ${bed} ${bam} > ${sample_id}.trimmed.bam
         """
 }

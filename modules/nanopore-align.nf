@@ -1,10 +1,8 @@
-#!/usr/bin/env nextflow
-nextflow.enable.dsl=2
-
 // alignment processes for Nanopore workflows
 process minimap2 {
     tag "Minimap2 alignment on ${reads.simpleName}"
     label "process_medium"
+    // publishDir "$params.outdir"+"/aln", mode: "copy"
 
     input:
         tuple val(sample_id), path(reads)

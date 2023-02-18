@@ -1,16 +1,12 @@
-#!/usr/bin/env nextflow
-nextflow.enable.dsl=2
-
 // basic processes for Nanopore workflows
 process combine {
     tag "Combining Fastq files for ${sample_id}"
     label "process_low"
-    cache false
 
     input:
         tuple val(sample_id), path(reads)
     output:
-        tuple val(sample_id), file("${sample_id}.{fastq,fastq.gz}")
+        tuple val(sample_id), path("${sample_id}.{fastq,fastq.gz}")
     shell:
         """
         sample=\$(ls ${reads} | head -n 1)
@@ -25,7 +21,6 @@ process combine {
 process porechop {
     tag "Adapter trimming on ${reads.simpleName}"
     label "process_high"
-    cache true
 
     input:
         tuple val(sample_id), path(reads)
@@ -40,34 +35,16 @@ process porechop {
 process nanoq {
     tag "Read filtering on ${reads.simpleName}"
     label "process_low"
-    cache true
 
     input:
         tuple val(sample_id), path(reads)
+        val min_rl
+        val min_rq
+        val max_rl
     output:
         tuple val(sample_id), file("${reads.simpleName}.filt.fastq.gz")
     shell:
         """
-        nanoq -i ${reads} -l 300 -q 5 -O g > ${reads.simpleName}.filt.fastq.gz
-        """
-}
-
-process nanofilt {
-    tag "Read filtering on ${reads.simpleName}"
-    label "process_low"
-    cache true
-
-    input:
-        tuple val(sample_id), path(reads)
-    output:
-        tuple val(sample_id), file("${reads.simpleName}.filt.fastq.gz")
-    shell:
-        """
-        sample=\$(ls ${reads} | head -n 1)
-        if [[ \${sample##*.} == "gz" ]]; then
-            zcat ${reads} | NanoFilt -q 10 | gzip > ${reads.simpleName}.filt.fastq.gz
-        else
-            cat ${reads} | NanoFilt -q 10 | gzip > ${reads.simpleName}.filt.fastq.gz
-        fi
+        nanoq -i ${reads} -l ${min_rl} -q ${min_rq} -m ${max_rl} -O g > ${reads.simpleName}.filt.fastq.gz
         """
 }
