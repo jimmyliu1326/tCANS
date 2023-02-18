@@ -35,7 +35,8 @@
                 },
                 "reference": {
                     "type": "string",
-                    "format": "file-path"
+                    "format": "file-path",
+                    "description": "Path to reference sequence for consensus calling"
                 },
                 "primers": {
                     "type": "string",
@@ -53,7 +54,8 @@
                 "host": {
                     "type": "string",
                     "format": "file-path",
-                    "default": "null"
+                    "default": "null",
+                    "description": "Path to host reference sequence for dehosting"
                 }
             }
         },
@@ -79,8 +81,8 @@
                     "description": "Minimum read quality score"
                 },
                 "notrim": {
-                    "type": "string",
-                    "default": "False"
+                    "type": "boolean",
+                    "description": "Disable adaptor trimming by Porechop"
                 }
             }
         },
@@ -105,12 +107,11 @@
         "gpu_acceleration": {
             "title": "GPU Acceleration",
             "type": "object",
-            "description": "",
+            "description": "Allocate GPU resources to pipeline processes",
             "default": "",
             "properties": {
                 "gpu": {
-                    "type": "string",
-                    "default": "False",
+                    "type": "boolean",
                     "description": "Enable GPU acceleration"
                 },
                 "medaka_batchsize": {
