@@ -54,7 +54,7 @@
                 "host": {
                     "type": "string",
                     "format": "file-path",
-                    "default": "null",
+                    "default": "false",
                     "description": "Path to host reference sequence for dehosting"
                 }
             }
