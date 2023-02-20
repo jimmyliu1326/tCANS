@@ -71,9 +71,11 @@ class WorkflowMain {
             System.exit(1)
         }
 
-        if ( !Utils.fileExists(params.host) ) {
-            log.error "Please provide a valid path to the host reference sequence"
-            System.exit(1)
+        if ( params.host ) {
+            if ( !Utils.fileExists(params.host) ) {
+                log.error "Please provide a valid path to the host reference sequence"
+                System.exit(1)
+            }
         }
 
         if ( !Utils.fileExists(params.primers) ) {
