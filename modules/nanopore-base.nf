@@ -20,7 +20,7 @@ process combine {
 
 process porechop {
     tag "Adapter trimming on ${reads.simpleName}"
-    label "process_high"
+    label "process_med"
 
     input:
         tuple val(sample_id), path(reads)
@@ -29,6 +29,20 @@ process porechop {
     shell:
         """
         porechop -t ${task.cpus} -i ${reads} -o ${reads.simpleName}.trimmed.fastq
+        """
+}
+
+process porechop_abi {
+    tag "Adapter trimming on ${sample_id}"
+    label "process_med"
+
+    input:
+        tuple val(sample_id), path(reads)
+    output:
+        tuple val(sample_id), file("${sample_id}.trimmed.fastq.gz")
+    shell:
+        """
+        porechop_abi -t ${task.cpus} -abi -i ${reads} -o ${reads.simpleName}.trimmed.fastq.gz
         """
 }
 
