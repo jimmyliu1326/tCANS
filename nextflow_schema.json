@@ -54,7 +54,7 @@
                 "host": {
                     "type": "string",
                     "format": "file-path",
-                    "default": "false",
+                    "default": "null",
                     "description": "Path to host reference sequence for dehosting"
                 }
             }
@@ -82,7 +82,7 @@
                 },
                 "notrim": {
                     "type": "boolean",
-                    "description": "Disable adaptor trimming by Porechop"
+                    "description": "Disable adaptor trimming by Porechop ABI"
                 }
             }
         },
@@ -101,6 +101,11 @@
                     "type": "integer",
                     "default": 1000,
                     "description": "Subsample to a defined depth prior to consensus calling"
+                },
+                "max_N": {
+                    "type": "number",
+                    "default": 0.75,
+                    "description": "Maximum percentage of N bases allowed in consensus, ranging from 0 to 1"
                 }
             }
         },
