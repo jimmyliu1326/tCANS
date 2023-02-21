@@ -5,7 +5,7 @@ nextflow.enable.dsl=2
 WorkflowMain.initialise(workflow, params, log)
 
 // import modules
-include { combine; nanoq; porechop } from './modules/nanopore-base.nf'
+include { combine; nanoq; porechop; porechop_abi } from './modules/nanopore-base.nf'
 include { minimap2 as minimap2_init; minimap2 as minimap2_rq_filt; minimap2 as minimap2_dehost; minimap2 as minimap2_dehosted } from './modules/nanopore-align.nf'
 include { dehost } from './modules/dehost.nf'
 include { samtools_index } from './modules/samtools/index/main.nf'
@@ -13,6 +13,7 @@ include { medaka; medaka_gpu } from './modules/nanopore-polish.nf'
 include { ivar_consensus; ivar_trim; bam2fq; ampliconclip } from './modules/ivar.nf'
 include { bedgraph as bedgraph_init; bedgraph as bedgraph_rq_filt; bedgraph as bedgraph_dehost; bedgraph as bedgraph_trim } from './modules/bedtools/bedgraph/main.nf'
 include { igv_report as igv_report_init; igv_report as igv_report_rq_filt; igv_report as igv_report_dehost; igv_report as igv_report_trim } from './modules/igv-report/main.nf'
+include { seqkit_fx2tab } from './modules/seqkit/fx2tab/main.nf'
 
 // define workflow
 workflow {
@@ -25,9 +26,9 @@ workflow {
     // quality filter
     combine(data)
     if( !params.notrim ) { 
-        porechop(combine.out)
+        porechop_abi(combine.out)
         nanoq(
-            porechop.out,
+            porechop_abi.out,
             params.min_rl,
             params.min_rq,
             params.max_rl
@@ -47,7 +48,7 @@ workflow {
     // reference alignment
     // for init data
     if ( !params.notrim ) { 
-        minimap2_init(porechop.out, reference)
+        minimap2_init(porechop_abi.out, reference)
     } else {
         minimap2_init(combine.out, reference)
     }
@@ -90,11 +91,19 @@ workflow {
     // consensus calling
     ivar_consensus(ampliconclip.out)
 
+    // check for N content in consensus sequences
+    // filter sequence if N exceeds threshold
+    seqkit_fx2tab(ivar_consensus.out)
+        .join(ivar_consensus.out)
+        .filter { it[1].toBigDecimal() <= params.max_N * 100 }
+        .map { return tuple(it[0], it[2]) }
+        .set { consensus_filt }
+
     // consensus polishing
     if ( params.gpu ) {
-        medaka_gpu(ivar_consensus.out.join(bam2fq.out))
+        medaka_gpu(consensus_filt.join(bam2fq.out))
     } else {
-        medaka(ivar_consensus.out.join(bam2fq.out))
+        medaka(consensus_filt.join(bam2fq.out))
     }
     
 }
