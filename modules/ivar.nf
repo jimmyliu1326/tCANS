@@ -20,10 +20,15 @@ process ivar_consensus {
     input:
         tuple val(sample_id), path(bam)
     output:
-        tuple val(sample_id), file("*.unpolish.fa")
+        tuple val(sample_id), file("*.unpolish.fa"), optional: true
     shell:
         """
         samtools mpileup -d ${params.max_depth} -A -Q ${params.min_rq} ${bam} | ivar consensus -p ${sample_id}.unpolish -q ${params.min_rq} -m ${params.min_depth}
+
+        # remove consensus if it is empty
+        if [[ \$(cat ${sample_id}.unpolish.fa | wc -l ) -eq 1 ]]; then
+            rm ${sample_id}.unpolish.fa
+        fi
         """
 }
 
