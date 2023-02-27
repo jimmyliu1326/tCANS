@@ -14,6 +14,8 @@ include { ivar_consensus; ivar_trim; bam2fq; ampliconclip } from './modules/ivar
 include { bedgraph as bedgraph_init; bedgraph as bedgraph_rq_filt; bedgraph as bedgraph_dehost; bedgraph as bedgraph_trim } from './modules/bedtools/bedgraph/main.nf'
 include { igv_report as igv_report_init; igv_report as igv_report_rq_filt; igv_report as igv_report_dehost; igv_report as igv_report_trim } from './modules/igv-report/main.nf'
 include { seqkit_fx2tab } from './modules/seqkit/fx2tab/main.nf'
+include { concat_fasta } from './modules/concat/main.nf'
+include { webblast_blastn } from './modules/webblast/blastn/main.nf'
 
 // define workflow
 workflow {
@@ -101,9 +103,19 @@ workflow {
 
     // consensus polishing
     if ( params.gpu ) {
-        medaka_gpu(consensus_filt.join(bam2fq.out))
+        consensus = medaka_gpu(consensus_filt.join(bam2fq.out))
     } else {
-        medaka(consensus_filt.join(bam2fq.out))
+        consensus = medaka(consensus_filt.join(bam2fq.out))
+    }
+
+    // run Web BLAST
+    if ( params.run_blast ) {
+        consensus
+            .map { it[1] }
+            .collect()
+            | concat_fasta
+        
+        webblast_blastn(concat_fasta.out)
     }
     
 }

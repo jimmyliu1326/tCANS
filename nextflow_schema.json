@@ -109,6 +109,33 @@
                 }
             }
         },
+        "blast_api_options": {
+            "title": "Blast API options",
+            "type": "object",
+            "description": "Running BLASTN query using web API",
+            "default": "",
+            "properties": {
+                "run_blast": {
+                    "type": "boolean",
+                    "description": "Invoke NCBI BLASTN query after consensus calling"
+                },
+                "blast_db": {
+                    "type": "string",
+                    "default": "nt",
+                    "description": "Nucleotide database to query",
+                    "enum": [
+                        "nt",
+                        "refseq_rna",
+                        "pdbnt"
+                    ]
+                },
+                "blast_evalue": {
+                    "type": "number",
+                    "default": 0.01,
+                    "description": "BLAST hit e-value"
+                }
+            }
+        },
         "gpu_acceleration": {
             "title": "GPU Acceleration",
             "type": "object",
@@ -158,6 +185,9 @@
         },
         {
             "$ref": "#/definitions/consensus_calling"
+        },
+        {
+            "$ref": "#/definitions/blast_api_options"
         },
         {
             "$ref": "#/definitions/gpu_acceleration"
