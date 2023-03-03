@@ -1,7 +1,7 @@
 process igv_report {
     tag "Creating IGV Report for ${outdir} reads"
     label "process_low"
-    publishDir "$params.outdir"+"/coverage/${outdir}", mode: "copy"
+    publishDir "$params.outdir"+"/reports/", mode: "copy"
 
     input:
         path(bam)
@@ -14,6 +14,6 @@ process igv_report {
         """
         create_report ${bed} ${reference} \
             --tracks *.bedgraph \
-            --output coverage_report.html
+            --output coverage_report.${outdir}.html
         """
 }
