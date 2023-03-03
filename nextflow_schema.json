@@ -109,25 +109,27 @@
                 }
             }
         },
-        "blast_api_options": {
-            "title": "Blast API options",
+        "new_group_1": {
+            "title": "New Group 1",
             "type": "object",
-            "description": "Running BLASTN query using web API",
+            "description": "",
+            "default": "",
+            "properties": {
+                "run_msa": {
+                    "type": "boolean",
+                    "description": "Compare consensus sequences by multiple sequence alignment"
+                }
+            }
+        },
+        "ncbi_blast": {
+            "title": "NCBI Blast",
+            "type": "object",
+            "description": "Run remote BLASTN query",
             "default": "",
             "properties": {
                 "run_blast": {
                     "type": "boolean",
                     "description": "Invoke NCBI BLASTN query after consensus calling"
-                },
-                "blast_db": {
-                    "type": "string",
-                    "default": "nt",
-                    "description": "Nucleotide database to query",
-                    "enum": [
-                        "nt",
-                        "refseq_rna",
-                        "pdbnt"
-                    ]
                 },
                 "blast_evalue": {
                     "type": "number",
@@ -187,7 +189,10 @@
             "$ref": "#/definitions/consensus_calling"
         },
         {
-            "$ref": "#/definitions/blast_api_options"
+            "$ref": "#/definitions/new_group_1"
+        },
+        {
+            "$ref": "#/definitions/ncbi_blast"
         },
         {
             "$ref": "#/definitions/gpu_acceleration"

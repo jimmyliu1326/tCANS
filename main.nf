@@ -15,7 +15,12 @@ include { bedgraph as bedgraph_init; bedgraph as bedgraph_rq_filt; bedgraph as b
 include { igv_report as igv_report_init; igv_report as igv_report_rq_filt; igv_report as igv_report_dehost; igv_report as igv_report_trim } from './modules/igv-report/main.nf'
 include { seqkit_fx2tab } from './modules/seqkit/fx2tab/main.nf'
 include { concat_fasta } from './modules/concat/main.nf'
+include { blast_blastn } from './modules/blast/blastn/main.nf'
+include { blast_formatter } from './modules/blast/blast_formatter/main.nf'
 include { webblast_blastn } from './modules/webblast/blastn/main.nf'
+include { mafft } from './modules/mafft/main.nf'
+include { msa_vis } from './modules/msa-vis/main.nf'
+include { concat_ref_query_fasta } from './modules/concat_ref_query/main.nf'
 
 // define workflow
 workflow {
@@ -110,12 +115,23 @@ workflow {
 
     // run Web BLAST
     if ( params.run_blast ) {
+        
         consensus
             .map { it[1] }
             .collect()
             | concat_fasta
         
-        webblast_blastn(concat_fasta.out)
+        blast_blastn(concat_fasta.out)
+        blast_formatter(blast_blastn.out.result.map{ it[1] })
+        
+    }
+
+    if ( params.run_msa ) {
+        
+        concat_ref_query_fasta(consensus.map { it[1] }.collect(), reference)
+        mafft(concat_ref_query_fasta.out)
+        msa_vis(mafft.out)
+        
     }
     
 }
