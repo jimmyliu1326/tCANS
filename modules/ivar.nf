@@ -27,7 +27,7 @@ process ivar_consensus {
             ivar consensus -p ${sample_id}.unpolish -q ${params.min_rq} -m ${params.min_depth} -i ${sample_id}
 
         # remove consensus if it is empty
-        if [[ \$(cat ${sample_id}.unpolish.fa | wc -l ) -eq 1 ]]; then
+        if [[ \$(awk 'NF' ${sample_id}.unpolish.fa | wc -l ) -eq 1 ]]; then
             rm ${sample_id}.unpolish.fa
         fi
         """
