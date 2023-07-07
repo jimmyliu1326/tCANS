@@ -11,8 +11,7 @@ process mafft {
         """
         mafft \
             --maxiterate 1000 \
-            --adjustdirection \
             --thread ${task.cpus} \
-            ${fasta} | sed 's/_R_//g' > consensus.msa.fa
+            ${fasta} > consensus.msa.fa
         """
 }
