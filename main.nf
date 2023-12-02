@@ -25,9 +25,16 @@ include { concat_ref_query_fasta } from './modules/concat_ref_query/main.nf'
 // define workflow
 workflow {
     // read data
-    data = channel.fromPath(params.input, checkIfExists: true).splitCsv(header: false)
+    if ( params.input ) {
+        data = Channel.fromPath(params.input, checkIfExists: true).splitCsv(header: false)
+    } else {
+        log.error "No valid inputs were provided."
+        System.exit(1)
+    }
+    
     reference = file(params.reference, checkIfExists:true)
     primers = file(params.primers, checkIfExists:true)
+    
     // workflow start
     
     // quality filter
