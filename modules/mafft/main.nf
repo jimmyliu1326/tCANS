@@ -1,7 +1,7 @@
 process mafft {
     tag "Building multiple sequence alignment of consensus seqs"
     label "process_medium"
-    publishDir "$params.outdir"+"/msa/", mode: "copy", pattern: "*.fa"
+    publishDir "$params.out_dir"+"/msa/", mode: "copy", pattern: "*.fa"
 
     input:
         path(fasta)

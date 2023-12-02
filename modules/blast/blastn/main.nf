@@ -1,7 +1,7 @@
 process blast_blastn {
     tag "Querying NCBI nt database remotely"
     label "process_low"
-    publishDir "$params.outdir"+"/reports/", mode: "copy", pattern: "*.html"
+    publishDir "$params.out_dir"+"/reports/", mode: "copy", pattern: "*.html"
     errorStrategy 'retry'
     maxRetries 1
 

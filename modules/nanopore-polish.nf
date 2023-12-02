@@ -2,7 +2,7 @@
 process medaka {
     tag "Consensus polishing for ${sample_id}"
     label "process_medium"
-    publishDir "$params.outdir"+"/consensus", mode: "copy"
+    publishDir "$params.out_dir"+"/consensus", mode: "copy"
 
     input:
         tuple val(sample_id), path(assembly), path(reads)
@@ -19,7 +19,7 @@ process medaka {
 process medaka_gpu {
     tag "Consensus polishing for ${sample_id}"
     label "process_medium"
-    publishDir "$params.outdir"+"/consensus", mode: "copy"
+    publishDir "$params.out_dir"+"/consensus", mode: "copy"
     maxForks 1
 
     input:

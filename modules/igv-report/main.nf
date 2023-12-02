@@ -1,7 +1,7 @@
 process igv_report {
     tag "Creating IGV Report for ${outdir} reads"
     label "process_low"
-    publishDir "$params.outdir"+"/reports/", mode: "copy"
+    publishDir "$params.out_dir"+"/reports/", mode: "copy"
 
     input:
         path(bam)

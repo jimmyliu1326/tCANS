@@ -2,7 +2,7 @@
 process dehost {
     tag "Dehosting for ${bam.simpleName}"
     label "process_med"
-    // publishDir "$params.outdir"+"/${bam.simpleName}/dehost", mode: "copy"
+    // publishDir "$params.out_dir"+"/${bam.simpleName}/dehost", mode: "copy"
 
     input:
         tuple val(sample_id), path(bam)

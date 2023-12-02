@@ -1,7 +1,7 @@
 process blast_formatter {
     tag "Retrieving Blast results by RID"
     label "process_low"
-    publishDir "$params.outdir"+"/blast_res/", mode: "copy", pattern: "*.tsv"
+    publishDir "$params.out_dir"+"/blast_res/", mode: "copy", pattern: "*.tsv"
 
     input:
         val(RID)

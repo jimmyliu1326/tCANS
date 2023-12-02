@@ -50,7 +50,7 @@ process bam2fq {
 process ampliconclip {
     tag "Primer trimming on ${sample_id}"
     label "process_low"
-    // publishDir "$params.outdir"+"/amplicon_clip_aln/", mode: "copy"
+    // publishDir "$params.out_dir"+"/amplicon_clip_aln/", mode: "copy"
 
     input:
         tuple val(sample_id), path(bam)

@@ -1,7 +1,7 @@
 process webblast_blastn {
     tag "Querying NCBI nt database using Web BLAST"
     label "process_low"
-    publishDir "$params.outdir"+"/blast_res/", mode: "copy", pattern: "*.{tsv,html,log}"
+    publishDir "$params.out_dir"+"/blast_res/", mode: "copy", pattern: "*.{tsv,html,log}"
     errorStrategy 'retry'
     maxRetries 5
 

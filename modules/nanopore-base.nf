@@ -4,17 +4,15 @@ process combine {
     label "process_low"
 
     input:
-        tuple val(sample_id), path(reads)
+        tuple val(sample_id), path(dir)
     output:
-        tuple val(sample_id), path("${sample_id}.{fastq,fastq.gz}")
-    shell:
+        tuple val(sample_id), path("*.{fastq,fastq.gz}")
+    script:
+        // def ext = reads[0].getExtension() == 'gz' ? "fastq.gz" : "fastq"
         """
-        sample=\$(ls ${reads} | head -n 1)
-        if [[ \${sample##*.} == "gz" ]]; then
-            cat ${reads}/*.fastq.gz > ${sample_id}.fastq.gz
-        else
-            cat ${reads}/*.fastq > ${sample_id}.fastq
-        fi
+        sample=\$(find ${dir}/ -type f -name '*.fastq*' -printf '%f\\n' | head -n1)
+        if [[ \${sample##*.} == "gz" ]]; then ext="fastq.gz"; else ext="fastq"; fi
+        cat ${dir}/*.\${ext} > ${sample_id}.\${ext}
         """
 }
 
@@ -25,10 +23,10 @@ process porechop {
     input:
         tuple val(sample_id), path(reads)
     output:
-        tuple val(sample_id), file("${reads.simpleName}.trimmed.fastq")
+        tuple val(sample_id), file("${sample_id}.trimmed.fastq")
     shell:
         """
-        porechop -t ${task.cpus} -i ${reads} -o ${reads.simpleName}.trimmed.fastq
+        porechop -t ${task.cpus} -i ${reads} -o ${sample_id}.trimmed.fastq
         """
 }
 
@@ -42,7 +40,7 @@ process porechop_abi {
         tuple val(sample_id), file("${sample_id}.trimmed.fastq.gz")
     shell:
         """
-        porechop_abi -t ${task.cpus} -abi -i ${reads} -o ${reads.simpleName}.trimmed.fastq.gz
+        porechop_abi -t ${task.cpus} -abi -i ${reads} -o ${sample_id}.trimmed.fastq.gz
         """
 }
 
@@ -56,9 +54,9 @@ process nanoq {
         val min_rq
         val max_rl
     output:
-        tuple val(sample_id), file("${reads.simpleName}.filt.fastq.gz")
+        tuple val(sample_id), file("${sample_id}.filt.fastq.gz")
     shell:
         """
-        nanoq -i ${reads} -l ${min_rl} -q ${min_rq} -m ${max_rl} -O g > ${reads.simpleName}.filt.fastq.gz
+        nanoq -i ${reads} -l ${min_rl} -q ${min_rq} -m ${max_rl} -O g > ${sample_id}.filt.fastq.gz
         """
 }

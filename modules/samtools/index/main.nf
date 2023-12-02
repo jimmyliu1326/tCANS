@@ -1,7 +1,7 @@
 process samtools_index {
     tag "Generating FASTA index"
     label "process_low"
-    publishDir "$params.outdir"+"/reference", mode: "copy"
+    publishDir "$params.out_dir"+"/reference", mode: "copy"
 
     input:
         path reference
@@ -9,18 +9,11 @@ process samtools_index {
         path("*"), emit: idx
         path("*.{fa,fa.gz}"), emit: reference
         path("*.bed"), emit: bed
-
-    shell:
+    script:
+        def out_file = reference.getExtension() == 'gz' ? "Reference.fa.gz" : "Reference.fa"
         """
-        if echo ${reference} | grep -q ".gz\$"; then
-            reference=Reference.fa.gz
-            cp ${reference} Reference.fa.gz
-        else 
-            reference=Reference.fa
-            cp ${reference} Reference.fa
-        fi
-        
-        samtools faidx \${reference}
-        awk 'BEGIN {FS="\t"}; {print \$1 FS "0" FS \$2}' \${reference}.fai > Reference.bed
+        ln -s ${reference} ${out_file}        
+        samtools faidx ${reference}
+        awk 'BEGIN {FS="\t"}; {print \$1 FS "0" FS \$2}' ${reference}.fai > Reference.bed
         """
 }
