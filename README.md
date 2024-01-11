@@ -23,19 +23,19 @@ nextflow run -r main -latest jimmyliu1326/tCANS --help
 **Docker (Default)**
 
 ```bash
-nextflow run -r main -latest jimmyliu1326/tCANS --input samples.csv --outdir /path/to/output -profile docker
+nextflow run -r main -latest jimmyliu1326/tCANS --input samples.csv --out_dir /path/to/output -profile docker
 ```
 
 **Singularity**
 
 ```bash
-nextflow run -r main -latest jimmyliu1326/tCANS --input samples.csv --outdir /path/to/output -profile singularity
+nextflow run -r main -latest jimmyliu1326/tCANS --input samples.csv --out_dir /path/to/output -profile singularity
 ```
 
 **Singularity + Slurm**
 
 ```bash
-nextflow run -r main -latest jimmyliu1326/tCANS --input samples.csv --outdir /path/to/output -profile slurm,singularity --account [slurm_account]
+nextflow run -r main -latest jimmyliu1326/tCANS --input samples.csv --out_dir /path/to/output -profile slurm,singularity --account [slurm_account]
 ```
 
 Below is the complete list of pipeline options available:
@@ -45,7 +45,7 @@ Required arguments:
     --input                       Path to .csv containing two columns encoding Sample ID and path to raw reads DIRECTORY
     --primers                     Path to .bed encoding the position of each primer
     --reference                   Path to .fasta reference sequence that corresponds to the coordinates in the primers .bed file
-    --outdir                      Output directory path
+    --out_dir                      Output directory path
 Optional arguments:
     --host                        Path to host reference genome in FASTA format for dehosting raw reads
     --notrim                      Disable adapter trimming by Porechop
