@@ -1,4 +1,4 @@
-[![CANS](https://circleci.com/gh/jimmyliu1326/tCANS.svg?style=svg)](https://app.circleci.com/pipelines/github/jimmyliu1326/tCANS)
+[![tCANS](https://circleci.com/gh/jimmyliu1326/tCANS.svg?style=svg)](https://app.circleci.com/pipelines/github/jimmyliu1326/tCANS)
 # tCANS: Consensus calling for (Tiling) Amplicon Nanopore Sequencing
 
 ## Description
@@ -11,10 +11,35 @@
  - Conda or Docker
 
 # Download workflow locally
-nextflow pull -hub github jimmyliu1326/tCANS
+nextflow pull -r main jimmyliu1326/tCANS
+
+# Check if the pipeline was successfully installed
+# by printing the pipeline help message
+nextflow run -r main -latest jimmyliu1326/tCANS --help
 ```
 
 ## Pipeline usage
+
+**Docker (Default)**
+
+```bash
+nextflow run -r main -latest jimmyliu1326/tCANS --input samples.csv --outdir /path/to/output -profile docker
+```
+
+**Singularity**
+
+```bash
+nextflow run -r main -latest jimmyliu1326/tCANS --input samples.csv --outdir /path/to/output -profile singularity
+```
+
+**Singularity + Slurm**
+
+```bash
+nextflow run -r main -latest jimmyliu1326/tCANS --input samples.csv --outdir /path/to/output -profile slurm,singularity --account [slurm_account]
+```
+
+Below is the complete list of pipeline options available:
+
 ```
 Required arguments:
     --input                       Path to .csv containing two columns encoding Sample ID and path to raw reads DIRECTORY
@@ -27,16 +52,6 @@ Optional arguments:
     --gpu                         Accelerate specific processes that utilize GPU computing. Must have NVIDIA Container
                                   Toolkit installed to enable GPU computing, otherwise use CPU. (Only works with -profile docker)
     --help                        Print pipeline usage statement
-```
-
-## Example pipeline call using Conda environments
-```
-nextflow run jimmyliu1326/tCANS --input samples.csv --outdir /path/to/output -profile conda
-```
-
-## Example pipeline call using Docker images
-```
-nextflow run jimmyliu1326/tCANS --input samples.csv --outdir /path/to/output -profile docker
 ```
 
 ## Input file formats
