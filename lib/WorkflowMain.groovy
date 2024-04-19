@@ -55,7 +55,7 @@ class WorkflowMain {
 
         // Print pipeline version if --version is invoked
         if (params.version) {
-            log.info "${workflow.manifest.name} v${workflow.manifest.version}"
+            log.info "${workflow.manifest.name} ${workflow.manifest.version}"
             System.exit(0)
         }
 
